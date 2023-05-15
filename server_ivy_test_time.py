@@ -2,7 +2,6 @@ import getopt
 import os
 import string
 import sys
-from time import sleep
 import time
 from ivy.std_api import *
 
@@ -37,10 +36,19 @@ def ondieproc(agent, _id):
 
 
 def onmsgproc(agent, *larg):
+    global start_time, end_time
     lprint('Received from %r: [%s] ', agent, larg[0])
+
+    if "start_time" in larg[0]:
+            start_time = float(larg[0].split("=")[1])
+            print(start_time)
+    if "last message" in larg[0]:
+        end_time = time.time()
+        print("Temps total de communication : ", (end_time - start_time))
 
 
 def onhello(agent, *larg):
+    
     sreply = 'goodday %s to=%s from=%s ' % (larg[0], larg[1], IVYAPPNAME)
     lprint('on hello , replying to %r: [%s]', agent, sreply)
     IvySendMsg(sreply)
@@ -75,7 +83,7 @@ if __name__ == '__main__':
     else:
         sechoivybus = 'ivydefault'
     lprint('Ivy will broadcast on %s ', sechoivybus)
-    start_time = time.time()
+
     # initialising the bus
     IvyInit(IVYAPPNAME,     # application name for Ivy
             sisreadymsg,    # ready message
@@ -88,16 +96,14 @@ if __name__ == '__main__':
     # is given ; this is performed by IvyStart (C)
     IvyStart(sivybus)
     # binding on dedicated message : starting with 'hello ...'
-    
+    #IvyBindMsg(onhello,'^hello=([^ ]*) from=([^ ]*)')
+    # binding to every message
+    IvyBindMsg(onmsgproc, '(.*)')
+    # creating a infinite timer
+   # timerid = IvyTimerRepeatAfter(0,        # number of time to be called
+      #                          1000,     # delay in ms between calls
+       #                           ontick)   # handler to call'''
+    #lprint('IvyTimerRepeatAfter id is  %d', timerid)
 
-    # envoie un message à toutes les applications connectées
-    sleep(2)
-    IvySendMsg("Hello Receiver, start_time=" + str(start_time))
-    for i in range(10000):
-        IvySendMsg("hello world number : " + str(i))
-        
-    IvySendMsg("Hello Receiver, this is the last message")
-    
-
-   # IvyMainLoop()
+    #lprint('%s doing IvyMainLoop', IVYAPPNAME)
 

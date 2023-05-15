@@ -76,6 +76,7 @@ if __name__ == '__main__':
         sechoivybus = 'ivydefault'
     lprint('Ivy will broadcast on %s ', sechoivybus)
     start_time = time.time()
+    print(start_time)
     # initialising the bus
     IvyInit(IVYAPPNAME,     # application name for Ivy
             sisreadymsg,    # ready message
@@ -93,8 +94,8 @@ if __name__ == '__main__':
     # envoie un message à toutes les applications connectées
     sleep(2)
     IvySendMsg("Hello Receiver, start_time=" + str(start_time))
-    for i in range(10000):
-        IvySendMsg("hello world number : " + str(i))
+    for i in range(1000000):
+        IvySendMsg("hello world number  " + str(i))
         
     IvySendMsg("Hello Receiver, this is the last message")
     

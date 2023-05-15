@@ -39,13 +39,7 @@ def onmsgproc(agent, *larg):
     global start_time, end_time
     lprint('Received from %r: [%s] ', agent, larg[0])
 
-    if "start_time" in larg[0]:
-            start_time = float(larg[0].split("=")[1])
-            print(start_time)
-    if "last message" in larg[0]:
-        end_time = time.time()
-        print("Temps total de communication : ", (end_time - start_time))
-
+    
 
 def onhello(agent, *larg):
     
@@ -99,7 +93,6 @@ if __name__ == '__main__':
     #IvyBindMsg(onhello,'^hello=([^ ]*) from=([^ ]*)')
     # binding to every message
     IvyBindMsg(onmsgproc, '(.*)')
-    print(start_time)
     # creating a infinite timer
    # timerid = IvyTimerRepeatAfter(0,        # number of time to be called
       #                          1000,     # delay in ms between calls

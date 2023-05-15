@@ -2,8 +2,12 @@ import getopt
 import os
 import string
 import sys
-from time import sleep
 import time
+from time import sleep
+from statistics import mean
+
+import matplotlib.pyplot as plt
+from matplotlib.figure import Figure
 from ivy.std_api import *
 
 IVYAPPNAME = 'pyhello'
@@ -34,13 +38,52 @@ def oncxproc(agent, connected):
 
 def ondieproc(agent, _id):
     lprint('received the order to die from %r with id = %d', agent, _id)
-
+    
+#declaration des variables globales
+msgid= 0
+plt_data = []
+#à changer en fonction du nombre de messages recus
+total_msgs = 1000000
 
 def onmsgproc(agent, *larg):
-    lprint('Received from %r: [%s] ', agent, larg[0])
+    global plt_data, msgid, total_msgs, time_interval
+    t1 = time.time()
+    #lprint('Received from %r: [%s] ', agent, larg[0])
+    
+    
+    
+    if "hello world number" in larg[0]:
+        msgid+=1
+        t0 = float(larg[0].split("=")[1])
+        time_interval = t1 - t0
+        plt_data.append(time_interval)
+        #print("condition")
+        #print(larg[0])
 
+        
+    
+    
+    #print(total_msgs)
+    #print(plt_data)
+        
+    #print(len(plt_data))
+    '''
+    if len(plt_data) == total_msgs:
+        # Dessiner le graphique
+        plt.plot(range(1, total_msgs+1), plt_data, 'ro')
+        plt.xlabel('Message number')
+        plt.ylabel('Time (s)')
+        plt.title('Time to receive each message')
+        plt.show()
+        plt.savefig("High resoltion.png",dpi=300)
+        plt.close()
+'''
+    
+    
+    
 
 def onhello(agent, *larg):
+    
     sreply = 'goodday %s to=%s from=%s ' % (larg[0], larg[1], IVYAPPNAME)
     lprint('on hello , replying to %r: [%s]', agent, sreply)
     IvySendMsg(sreply)
@@ -75,7 +118,7 @@ if __name__ == '__main__':
     else:
         sechoivybus = 'ivydefault'
     lprint('Ivy will broadcast on %s ', sechoivybus)
-    start_time = time.time()
+
     # initialising the bus
     IvyInit(IVYAPPNAME,     # application name for Ivy
             sisreadymsg,    # ready message
@@ -88,16 +131,22 @@ if __name__ == '__main__':
     # is given ; this is performed by IvyStart (C)
     IvyStart(sivybus)
     # binding on dedicated message : starting with 'hello ...'
+    #IvyBindMsg(onhello,'^hello=([^ ]*) from=([^ ]*)')
+    # binding to every message
+    IvyBindMsg(onmsgproc, '(.*)')
+    while msgid < total_msgs:
+        sleep(1)
     
+    if len(plt_data) == total_msgs:
 
-    # envoie un message à toutes les applications connectées
-    sleep(2)
-    IvySendMsg("Hello Receiver, start_time=" + str(start_time))
-    for i in range(10000):
-        IvySendMsg("hello world number : " + str(i))
-        
-    IvySendMsg("Hello Receiver, this is the last message")
+        # Dessiner le graphique
+        plt.plot(range(1, total_msgs+1), plt_data, 'ro')
+        plt.xlabel('Message number')
+        plt.ylabel('Time (s)')
+        plt.title('Time to receive each message')
+        print("La moyenne est ", mean(plt_data))
+        plt.show()
+        plt.savefig("10 msgs courts.png")
+        plt.close()
+
     
-
-   # IvyMainLoop()
-
