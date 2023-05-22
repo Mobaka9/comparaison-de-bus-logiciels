@@ -24,7 +24,6 @@ if len(sys.argv) > 2:
 topicfilter = "10001"
 socket.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
 
-# Process 5 updates
 total_value = 0
 for update_nbr in range (5):
     string = socket.recv()

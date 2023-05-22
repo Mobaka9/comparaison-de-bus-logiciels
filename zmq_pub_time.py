@@ -1,0 +1,31 @@
+import zmq
+import random
+import sys
+import time
+
+port = "5556"
+if len(sys.argv) > 1:
+    port =  sys.argv[1]
+    int(port)
+start_time = time.time()
+
+context = zmq.Context()
+socket = context.socket(zmq.PUB)
+socket.setsockopt(zmq.SNDHWM, 2000000)
+socket.bind("tcp://*:%s" % port)
+
+
+#nombre de messages en 2eme parametre
+total_msgs = sys.argv[2]
+time.sleep(2)
+for i in range(int(total_msgs)-1):
+    #print(i)
+    topic = 10001
+    messagedata = "hello Lorem ipsum dolor sit amet. Aut laboriosam praesentium hic voluptatem praesentium sit architecto unde. Qui officia adipisci sit obcaecati debitis et adipisci adipisci et iste nisi aut consequuntur dolores qui labore dolorem. Eum dolorem natus ea suscipit tempore At molestiae magnam qui alias dignissimos aut similique impedit. Id sunt dolores aut quis nemo sed voluptas asperiores qui voluptate quidem non galisum sint ut corrupti architecto. In accusantium exercitationem aut saepe dolores sed incidunt rerum aut aspernatur architecto ut dolor facere et voluptas doloremque. Id exercitationem saepe ut unde commodi aut magnam commodi? Ea quae accusantium et labore quia ab voluptates ratione qui suscipit deleniti est temporibus perferendis. Ea dolores dolore est saepe dolores ad architecto consequatur eum reprehenderit obcaecati ab voluptatem galisum. Nam perspiciatis placeat sed autem sunt qui rerum voluptatem in nisi iure. Aut nisi illum nam perspiciatis odit quo beatae vero ut sunt vitae id velit fugiat id aliquid repellat. Est sunt reprehenderit et odio quia rem laudantium mollitia sed velit tempore.Lorem ipsum dolor sit amet. Aut laboriosam praesentium hic voluptatem praesentium sit architecto unde. Qui officia adipisci sit obcaecati debitis et adipisci adipisci et iste nisi aut consequuntur dolores qui labore dolorem. Eum dolorem natus ea suscipit tempore At molestiae magnam qui alias dignissimos aut similique impedit. Id sunt dolores aut quis nemo sed voluptas asperiores qui voluptate quidem non galisum sint ut corrupti architecto. In accusantium exercitationem aut saepe dolores sed incidunt rerum aut aspernatur architecto ut dolor facere et voluptas doloremque. Id exercitationem saepe ut unde commodi aut magnam commodi? Ea quae accusantium et labore quia ab voluptates ratione qui suscipit deleniti est temporibus perferendis. Ea dolores dolore est saepe dolores ad architecto consequatur eum reprehenderit obcaecati ab voluptatem galisum. Nam perspiciatis placeat sed autem sunt qui rerum voluptatem in nisi iure. Aut nisi illum nam perspiciatis odit quo beatae vero ut sunt vitae id velit fugiat id aliquid repellat. Est sunt reprehenderit et odio quia rem laudantium mollitia sed velit tempore.Lorem ipsum dolor sit amet. Aut laboriosam praesentium hic voluptatem praesentium sit architecto unde. Qui officia adipisci sit obcaecati debitis et adipisci adipisci et iste nisi aut consequuntur dolores qui labore dolorem. Eum dolorem natus ea suscipit tempore At molestiae magnam qui alias dignissimos aut similique impedit. Id sunt dolores aut quis nemo sed voluptas asperiores qui voluptate quidem non galisum sint ut corrupti architecto. In accusantium exercitationem aut saepe dolores sed incidunt rerum aut aspernatur architecto ut dolor facere et voluptas doloremque. Id exercitationem saepe ut unde commodi aut magnam commodi? Ea quae accusantium et labore quia ab voluptates ratione qui suscipit deleniti est temporibus perferendis. Ea dolores dolore est saepe dolores ad architecto consequatur eum reprehenderit obcaecati ab voluptatem galisum. Nam perspiciatis placeat sed autem sunt qui rerum voluptatem in nisi iure. Aut nisi illum nam perspiciatis odit quo beatae vero ut sunt vitae id velit fugiat id aliquid repellat. Est sunt reprehenderit et odio quia rem laudantium mollitia sed velit tempore.Lorem ipsum dolor sit amet. Aut laboriosam praesentium hic voluptatem praesentium sit architecto unde. Qui officia adipisci sit obcaecati debitis et adipisci adipisci et iste nisi aut consequuntur dolores qui labore dolorem. Eum dolorem natus ea suscipit tempore At molestiae magnam qui alias dignissimos aut similique impedit. Id sunt dolores aut quis nemo sed voluptas asperiores qui voluptate quidem non galisum sint ut corrupti architecto. In accusantium exercitationem aut saepe dolores sed incidunt rerum aut aspernatur architecto ut dolor facere et voluptas doloremque. Id exercitationem saepe ut unde commodi aut magnam commodi? Ea quae accusantium et labore quia ab voluptates ratione qui suscipit deleniti est temporibus perferendis. Ea dolores dolore est saepe dolores ad architecto consequatur eum reprehenderit obcaecati ab voluptatem galisum. Nam perspiciatis placeat sed autem sunt qui rerum voluptatem in nisi iure. Aut nisi illum nam perspiciatis odit quo beatae vero ut sunt vitae id velit fugiat id aliquid repellat. Est sunt reprehenderit et odio quia rem laudantium mollitia sed velit tempore.Lorem ipsum dolor sit amet. Aut laboriosam praesentium hic voluptatem praesentium sit architecto unde. Qui officia adipisci sit obcaecati debitis et adipisci adipisci et iste nisi aut consequuntur dolores qui labore dolorem. Eum dolorem natus ea suscipit tempore At molestiae magnam qui alias dignissimos aut similique impedit. Id sunt dolores aut quis nemo sed voluptas asperiores qui voluptate quidem non galisum sint ut corrupti architecto. In accusantium exercitationem aut saepe dolores sed incidunt rerum aut aspernatur architecto ut dolor facere et voluptas doloremque. Id exercitationem saepe ut unde commodi aut magnam commodi? Ea quae accusantium et labore quia ab voluptates ratione qui suscipit deleniti est temporibus perferendis. Ea dolores dolore est saepe dolores ad architecto consequatur eum reprehenderit obcaecati ab voluptatem galisum. Nam perspiciatis placeat sed autem sunt qui rerum voluptatem in nisi iure. Aut nisi illum nam perspiciatis odit quo beatae vero ut sunt vitae id velit fugiat id aliquid repellat. Est sunt reprehenderit et odio quia rem laudantium mollitia sed velit tempore. ="+str(start_time)
+    #print (topic, messagedata)
+    socket.send_string(str(topic) + "&" + str(messagedata))
+    
+topic = 10001
+messagedata = "last message ="+str(start_time)
+#print (topic, messagedata)
+socket.send_string(str(topic) + "&" + str(messagedata))

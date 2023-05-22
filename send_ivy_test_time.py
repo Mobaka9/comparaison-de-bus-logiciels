@@ -94,7 +94,7 @@ if __name__ == '__main__':
     # envoie un message à toutes les applications connectées
     sleep(2)
     IvySendMsg("Hello Receiver, start_time=" + str(start_time))
-    for i in range(1000000):
+    for i in range(1000):
         IvySendMsg("hello world number  " + str(i))
         
     IvySendMsg("Hello Receiver, this is the last message")
