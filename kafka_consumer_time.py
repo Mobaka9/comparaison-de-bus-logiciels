@@ -25,7 +25,7 @@ if __name__ == '__main__':
         
         
         #print(msg.value)
-        print(i)
+        #print(i)
         
         if "last message" in msg.value.decode('utf-8'):
             end_time = time.time()

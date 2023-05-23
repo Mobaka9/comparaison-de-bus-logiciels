@@ -38,7 +38,7 @@ if __name__ == '__main__':
             plt.ylabel('Time (s)')
             plt.title('Time to receive each message')
             print("La moyenne est ", mean(plt_data))
-            plt.title("temps moyens d'émission de "+str(total_msgs)+" messages courts avec ZeroMQ.")
+            plt.title("temps moyens d'émission de "+str(total_msgs)+" messages longs avec apache kafka.")
             plt.show()
             plt.savefig("10 msgs courts.png")
             plt.close()

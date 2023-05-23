@@ -12,7 +12,7 @@ def publish_message(kafka_producer, topic_name, msg):
 
         kafka_producer.send(topic_name, value=string_bytes)
         kafka_producer.flush()
-        print('Message published successfully.')
+        #print('Message published successfully.')
     except Exception as ex:
         print(str(ex))
 
