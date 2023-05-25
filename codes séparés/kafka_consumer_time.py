@@ -16,7 +16,6 @@ if __name__ == '__main__':
     )
     total_msgs = sys.argv[1]
     total_msgs = int(total_msgs)
-    plt_data = []
     
     i=0
         
@@ -24,7 +23,7 @@ if __name__ == '__main__':
         i+=1
         
         
-        #print(msg.value)
+        print(msg.value)
         #print(i)
         
         if "last message" in msg.value.decode('utf-8'):

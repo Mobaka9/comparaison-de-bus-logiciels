@@ -37,11 +37,11 @@ def ondieproc(agent, _id):
 
 def onmsgproc(agent, *larg):
     global start_time, end_time
-    #lprint('Received from %r: [%s] ', agent, larg[0])
+    lprint('Received from %r: [%s] ', agent, larg[0])
 
     if "start_time" in larg[0]:
             start_time = float(larg[0].split("=")[1])
-            #print(start_time)
+            print(start_time)
     if "last message" in larg[0]:
         end_time = time.time()
         print("Temps total de communication : ", (end_time - start_time))
