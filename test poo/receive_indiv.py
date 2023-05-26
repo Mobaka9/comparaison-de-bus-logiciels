@@ -7,6 +7,10 @@ from time import sleep, time
 import sys
 from kafka import KafkaConsumer
 import time
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+from statistics import mean
 
 
 
@@ -15,6 +19,7 @@ class MessageReceiver:
     def __init__(self, protocol):
         self.protocol = protocol
         self.kafka_producer = None
+        self.plt_data = []
 
     @staticmethod
     def lprint(fmt, *arg):
@@ -94,71 +99,75 @@ class MessageReceiver:
             consumer_timeout_ms=10000
         )
         return consumer
-   
+    
+    def draw_graph(self, protocole, message_count):
+        
+        plt.plot(range(1, message_count+1), self.plt_data, 'ro')
+        plt.xlabel('Message number')
+        plt.ylabel('Time (s)')
+        plt.title("temps moyens d'émission de "+str(message_count)+" messages courts avec "+str(protocole)+".")
+        print("La moyenne est", mean(self.plt_data))
+        plt.savefig('graph.png')  # Enregistre le graphique dans un fichier
+        plt.close()  # Ferme la figure pour libérer les ressources
 
 
-    def receive_msg_ivy(self):
+    def receive_msg_ivy(self, message_count):
+        global total
+        total = message_count
         def onmsgproc(agent, *larg):
-            global start_time, end_time
-            print("hi")
-            self.lprint('Received from %r: [%s] ', agent, larg[0])
-
-            if "start_time" in larg[0]:
-                    start_time = float(larg[0].split("=")[1])
-                    print(start_time)
-            if "last message" in larg[0]:
-                end_time = time.time()
-                print("Temps total de communication : ", (end_time - start_time))
+            t1 = time.time()
+            #lprint('Received from %r: [%s] ', agent, larg[0])
+            
+            
+            if "hello world number" in larg[0]:
+                t0 = float(larg[0].split("=")[1])
+                time_interval = t1 - t0
+                self.plt_data.append(time_interval)
+                print(larg[0])
+                #print(len(self.plt_data))
+                if len(self.plt_data) == total:
+                    self.draw_graph("ivy", message_count)
 
         IvyBindMsg(onmsgproc, '(.*)')
-        
+
     def receive_msg_zmq(self, socket, message_count):
-                      
-            #Subscribe to 10001
-            topicfilter = "10001"
-            socket.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
+        #Subscribe to 10001
+        topicfilter = "10001"
+        socket.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
 
+        for i in range(message_count):
+            print(i)
+            string = socket.recv()
+            t1 = time.time()
+            print(string.decode('utf-8'))
+            #topic, messagedata = string.split()
+            topic, messagedata = string.decode('utf-8').split("&")
 
-            for i in range(message_count):
-                print(i)
-                print("hi")
-                string = socket.recv()
-                
-                print(string.decode('utf-8'))
-                #topic, messagedata = string.split()
-                topic, messagedata = string.decode('utf-8').split("&")
-
-                #messagedata = messagedata.decode('utf-8')
-                start_time = float(messagedata.split("=")[1])
-
-                if "last message" in messagedata:
-                    end_time = time.time()
-                    print("Temps total de communication : ", (end_time - start_time))
-
+            #messagedata = messagedata.decode('utf-8')
+            t0 = float(messagedata.split("=")[1])
+            time_interval = t1-t0
+            self.plt_data.append(time_interval)
+            if len(self.plt_data) == message_count:
+                    self.draw_graph("zeromq", message_count)
+    
     def receive_msg_kafka(self, message_count, consumer):
-        
         for msg in consumer:
             
+            t1 = time.time()
+            t0 = float(msg.value.decode('utf-8').split("=")[1])
+            time_interval = t1-t0
             
-            
+            self.plt_data.append(time_interval)
             print(msg.value)
-            #print(i)
             
-            if "last message" in msg.value.decode('utf-8'):
-                end_time = time.time()
-                start_time = float(msg.value.decode('utf-8').split("=")[1])
-                print("Temps total de communication : ", (end_time - start_time))
-            
+            if len(self.plt_data) == message_count:
+                    self.draw_graph("apache kafka", message_count)
 
-        if consumer is not None:
-            consumer.close()
-        
     
-        
     def receive_messages(self, port, message_count):
         if self.protocol == 'ivy':
             self.initialize_ivy()
-            self.receive_msg_ivy()
+            self.receive_msg_ivy(message_count)
         elif self.protocol == 'zeromq':
             socket = self.initialize_zmq(port)
             self.receive_msg_zmq(socket, message_count)
@@ -174,12 +183,12 @@ def main():
 
     protocol = sys.argv[1]
     port = sys.argv[3]
-    int(port)
     message_count = int(sys.argv[2])
 
     receiver = MessageReceiver(protocol)
 
     receiver.receive_messages(port, message_count)
+    
 
 
 if __name__ == '__main__':

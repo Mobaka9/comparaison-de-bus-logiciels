@@ -8,7 +8,7 @@ from kafka import KafkaConsumer
 
 if __name__ == '__main__':
     consumer = KafkaConsumer(
-        'test_topic',
+        'hello',
         auto_offset_reset='latest',
         bootstrap_servers=['localhost:9092'],
         api_version=(0, 10),

@@ -43,13 +43,12 @@ def ondieproc(agent, _id):
 msgid= 0
 plt_data = []
 #à changer en fonction du nombre de messages recus
-total_msgs = 1000000
+total_msgs = 1000
 
 def onmsgproc(agent, *larg):
     global plt_data, msgid, total_msgs, time_interval
     t1 = time.time()
     #lprint('Received from %r: [%s] ', agent, larg[0])
-    
     
     
     if "hello world number" in larg[0]:
@@ -58,7 +57,9 @@ def onmsgproc(agent, *larg):
         time_interval = t1 - t0
         plt_data.append(time_interval)
         #print("condition")
-        #print(larg[0])
+        print(larg[0])
+        print(len(plt_data))
+
 
         
     
@@ -137,6 +138,7 @@ if __name__ == '__main__':
     while msgid < total_msgs:
         sleep(1)
     
+    print(len(plt_data))
     if len(plt_data) == total_msgs:
 
         # Dessiner le graphique
