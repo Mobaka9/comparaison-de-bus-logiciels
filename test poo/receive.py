@@ -174,7 +174,7 @@ def main():
 
     protocol = sys.argv[1]
     port = sys.argv[3]
-    int(port)
+    #int(port)
     message_count = int(sys.argv[2])
 
     receiver = MessageReceiver(protocol)

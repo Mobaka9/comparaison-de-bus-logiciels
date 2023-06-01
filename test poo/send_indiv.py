@@ -91,7 +91,7 @@ class MessageSender:
     def send_messages_ivy(self, message_count):
         sleep(2)
 
-        for i in range(1000):
+        for i in range(message_count):
             print(i)
             t0 = time.time()
             IvySendMsg("hello world number =" + str(t0))
