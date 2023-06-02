@@ -12,4 +12,4 @@ class AbstractProtocol(ABC):
     
     @abstractmethod
     def receive_message(self):
-        pass
+        pass 
