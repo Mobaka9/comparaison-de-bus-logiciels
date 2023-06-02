@@ -7,7 +7,7 @@ class AbstractProtocol(ABC):
         pass
 
     @abstractmethod
-    def send_message(self, message):
+    def send_message(self, message, topic):
         pass
     
     @abstractmethod

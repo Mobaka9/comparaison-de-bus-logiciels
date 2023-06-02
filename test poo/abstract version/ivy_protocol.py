@@ -15,6 +15,9 @@ class IvyProtocol(AbstractProtocol):
         self.is_initialized = False
         self.args = args
         self.msg = None
+        self.id = 0
+        self.plt_data = []
+        self.wait = True
         
     
     
@@ -76,15 +79,15 @@ class IvyProtocol(AbstractProtocol):
 
                 # initialising the bus
             IvyInit(IVYAPPNAME,     # application name for Ivy
-                    sisreadymsg,    # ready message
+                   # sisreadymsg,    # ready message
                     0,              # main loop is local (ie. using IvyMainloop)
                     oncxproc,       # handler called on connection/disconnection
                     ondieproc)      # handler called when a <die> message is received
             IvyStart(sivybus)
             self.is_initialized = True
-            IvyBindMsg(self.onmsgproc, '(.*)')
+            
 
-    def send_message(self, message):
+    def send_message(self, message, topic):
     
             IvySendMsg(message)
     @staticmethod
@@ -93,13 +96,23 @@ class IvyProtocol(AbstractProtocol):
             print(IVYAPPNAME + ': ' + fmt % arg)
     def onmsgproc(self,agent, *larg):
         #self.lprint('Received from %r: [%s] ', agent, larg[0])
-
+        t1= time.time()
         self.msg = larg[0]
+        self.id+=1
+        tmp = [self.id, larg[0], t1]
+        self.plt_data.append(tmp)
+        
+    def onmsgproc2(self,agent, *larg):
+        print("last one")
+        self.wait = False
+        
+        
+        
             
-            
-    def receive_message(self):
-        while(not self.msg):
+    def receive_message(self,message_count):
+        IvyBindMsg(self.onmsgproc, '(.*)')
+        
+        IvyBindMsg(self.onmsgproc2, '(last message)')
+        while(self.wait):
             pass
-        msg=self.msg
-        self.msg = None
-        return msg
+        return self.plt_data

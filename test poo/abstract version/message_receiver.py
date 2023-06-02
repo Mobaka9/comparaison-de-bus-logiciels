@@ -9,6 +9,7 @@ class MessageReceiver:
         self.protocol_obj = protocol_obj
         self.bus = bus
         self.plt_data = []
+        self.data=[]
     
     
     def draw_graph(self, protocole, message_count):
@@ -18,7 +19,7 @@ class MessageReceiver:
         plt.ylabel('Time (s)')
         plt.title("temps moyens d'émission de "+str(message_count)+" messages courts avec "+str(protocole)+".")
         print("La moyenne est", mean(self.plt_data))
-        plt.savefig('graph.png')  # Enregistre le graphique dans un fichier
+        plt.savefig('graph '+str(self.bus)+' '+str(message_count)+'msgs.png')  # Enregistre le graphique dans un fichier
         plt.close()  # Ferme la figure pour libérer les ressources
 
         
@@ -28,43 +29,24 @@ class MessageReceiver:
         
         
         if test_type == "total":
-        
-            '''if self.bus == "ivy":
-                
-                print("hi")
-                msg = self.protocol_obj.receive_message()
-                
-                if msg is not None:
-                        start_time = float(msg.split("=")[1])
-                        if "last message" in msg:
-                            end_time = time.time()
-                            print("Temps total de communication : ", (end_time - start_time))
-                
-            else: '''   
-            for i in range(message_count):
-                msg = self.protocol_obj.receive_message()
-                print(i)
-                if msg is not None :
-                    print(msg)
+            self.data = self.protocol_obj.receive_message(message_count)
+            print(self.data)
+            start_time = float(self.data[0][1].split("=")[1])
+            
                     
-                    if not "ready" in msg:
-                        start_time = float(msg.split("=")[1])
-                    if "last message" in msg:
-                        end_time = time.time()
-                        print("Temps total de communication : ", (end_time - start_time))
+            print("Temps total de communication : ", (self.data[-1][2] - start_time))
+
+         
         elif test_type == "graph":
-               
+            self.data = self.protocol_obj.receive_message(message_count) 
+            print(self.data)
             for i in range(message_count):
-                msg = self.protocol_obj.receive_message()
-                t1 = time.time()
-                if msg : 
-                    print(msg)
-                    t0 = float(msg.split("=")[1]) 
-                    print(t0) 
-                    time_interval = t1 - t0
+                
+                if self.data : 
+                    t0 = float(self.data[i][1].split("=")[1]) 
+                    time_interval = self.data[i][2] - t0
                     self.plt_data.append(time_interval)
-                    print(len(self.plt_data))
-            if len(self.plt_data) == message_count:
-                    self.draw_graph(self.bus, message_count)    
+
+            self.draw_graph(self.bus, message_count)    
         else :
             print("mauvais type de test choisi. veuillez entrer soit graph soit total.")
