@@ -7,13 +7,12 @@ from ivy_protocol import IvyProtocol
 from kafka_protocol import KafkaProtocol
 from message_receiver import MessageReceiver
 
+from time import sleep
 
 
 
 
-
-def main_receive(protocol, message_count, test_type, port):
-    
+def main_receive(protocol, message_count, test_type, port, queue):
     
     com = "sub"
     if protocol == 'ivy':
@@ -32,8 +31,10 @@ def main_receive(protocol, message_count, test_type, port):
         print("Unsupported protocol: "+str(protocol))
         return
 
+    #protocol_obj.send_message("I am ready","start")
+    
     receiver = MessageReceiver(protocol_obj, protocol)
-    receiver.receive_messages(message_count, test_type)
+    receiver.receive_messages(message_count, test_type, queue)
     
     '''sender = MessageSender(protocol_obj)
     sender.send_messages(message_count)'''

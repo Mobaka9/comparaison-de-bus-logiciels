@@ -11,7 +11,10 @@ class ZeroMQProtocol(AbstractProtocol):
         self.com = com
         self.plt_data = []
         self.id = 0
-        self.wait = True
+        self.wait = False
+        self.socket_test = None
+        self.ready = False
+        self.port_test = "5557"
 
     def initialize(self):
         context = zmq.Context()
@@ -19,14 +22,37 @@ class ZeroMQProtocol(AbstractProtocol):
             self.socket = context.socket(zmq.PUB)
             self.socket.setsockopt(zmq.SNDHWM, 2000000)
             self.socket.bind("tcp://*:%s" % self.port)
-            sleep(3)
+            
+
+            #sleep(3)
 
         else:
             self.socket = context.socket(zmq.SUB)
             self.socket.setsockopt(zmq.RCVHWM, 2000000)
             self.socket.connect("tcp://localhost:%s" % self.port)
+            
         
-        
+    def receiver_ready(self):
+        print("start receive")
+        context = zmq.Context()
+
+        self.socket_test = context.socket(zmq.SUB)
+        self.socket_test.setsockopt(zmq.RCVHWM, 2000000)
+        self.socket_test.connect("tcp://localhost:%s" % self.port_test)
+        while not self.ready:
+            self.socket_test.setsockopt_string(zmq.SUBSCRIBE, "10000")
+
+            string = self.socket_test.recv()
+            print("dkhlna")
+
+            topic, messagedata = string.decode('utf-8').split("&")
+            print("topic")
+            if topic == "100":
+                    print("start received")
+                    self.ready = True
+                    
+        print("The receiver is ready")
+        return self.ready
         
 
     def send_message(self, message, topic):
@@ -35,7 +61,18 @@ class ZeroMQProtocol(AbstractProtocol):
 
 
 
-    def receive_message(self,message_count):
+    def receive_message(self,message_count,queue):
+        #initialisation
+        """ context2 = zmq.Context()
+        self.socket_test = context2.socket(zmq.PUB)
+        self.socket_test.setsockopt(zmq.SNDHWM, 2000000)
+        self.socket_test.bind("tcp://*:%s" % self.port_test)
+        topic_message = "10000&receiver ready"  # Ajouter le topic au message
+        print(topic_message)
+        self.socket_test.send_string(topic_message) """
+
+        queue.put("RECEIVER_READY")
+
         topicfilter = "10001"
         self.socket.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
         self.socket.setsockopt_string(zmq.SUBSCRIBE, "10002")

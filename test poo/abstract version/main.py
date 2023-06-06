@@ -17,12 +17,12 @@ def main():
     port = sys.argv[4:] if protocol == 'ivy' else None
     port = sys.argv[4] if protocol != 'ivy' else None
 
-
+    queue = multiprocessing.Queue()
     
-    receive_process = multiprocessing.Process(target=main_receive, args=(protocol, message_count, test_type, port))
-    send_process = multiprocessing.Process(target=main_send, args=(protocol, message_count, test_type, port))
+    receive_process = multiprocessing.Process(target=main_receive, args=(protocol, message_count, test_type, port, queue))
+    send_process = multiprocessing.Process(target=main_send, args=(protocol, message_count, test_type, port, queue))
     receive_process.start()
-    sleep(2)
+    #sleep(2)
     send_process.start()
 
 

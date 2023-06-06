@@ -23,13 +23,12 @@ class MessageReceiver:
         plt.close()  # Ferme la figure pour libérer les ressources
 
         
-    def receive_messages(self, message_count, test_type):
-        
-        sleep(2)
+    def receive_messages(self, message_count, test_type, queue):
         
         
         if test_type == "total":
-            self.data = self.protocol_obj.receive_message(message_count)
+            print("hey")
+            self.data = self.protocol_obj.receive_message(message_count,queue)
             print(self.data)
             start_time = float(self.data[0][1].split("=")[1])
             
@@ -38,7 +37,7 @@ class MessageReceiver:
 
          
         elif test_type == "graph":
-            self.data = self.protocol_obj.receive_message(message_count) 
+            self.data = self.protocol_obj.receive_message(message_count,queue) 
             print(self.data)
             for i in range(message_count):
                 

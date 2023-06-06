@@ -86,6 +86,8 @@ class IvyProtocol(AbstractProtocol):
             IvyStart(sivybus)
             self.is_initialized = True
             
+    def receiver_ready(self):
+        pass
 
     def send_message(self, message, topic):
     
@@ -109,7 +111,9 @@ class IvyProtocol(AbstractProtocol):
         
         
             
-    def receive_message(self,message_count):
+    def receive_message(self,message_count,queue):
+        queue.put("RECEIVER_READY")
+        
         IvyBindMsg(self.onmsgproc, '(.*)')
         
         IvyBindMsg(self.onmsgproc2, '(last message)')

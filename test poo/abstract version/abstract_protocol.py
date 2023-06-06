@@ -11,5 +11,9 @@ class AbstractProtocol(ABC):
         pass
     
     @abstractmethod
+    def receiver_ready(self):
+        pass
+    
+    @abstractmethod
     def receive_message(self):
         pass 

@@ -35,7 +35,7 @@ for i in range(total_msgs):
     print(i)
     string = socket.recv()
     
-    #print(string.decode('utf-8'))
+    print(string.decode('utf-8'))
     #topic, messagedata = string.split()
     topic, messagedata = string.decode('utf-8').split("&")
 

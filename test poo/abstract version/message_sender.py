@@ -9,12 +9,12 @@ class MessageSender:
 
     def send_messages(self, message_count, type):
         
-        sleep(2)
         
         if type == "total":
             start_time = time.time() 
+            sleep(10)
             for i in range(message_count):
-                print(i)
+                #print(i)
                 
                 message = "hello =" + str(start_time)
                 self.protocol.send_message(message, self.topic)
@@ -22,7 +22,7 @@ class MessageSender:
             self.protocol.send_message(message, "10002")
         elif type == "graph":
             for i in range(message_count):
-                print(i)
+                #print(i)
                 start_time = time.time()
                 message = "hello =" + str(start_time)
                 self.protocol.send_message(message, self.topic)
