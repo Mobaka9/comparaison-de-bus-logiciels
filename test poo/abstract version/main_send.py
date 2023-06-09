@@ -40,15 +40,15 @@ def main_send(protocol, message_count, test_type, port, queue):
     else:
         print("Protocole invalide spécifié")
         return
-    '''
-    receiver_ready = False
+    
+    """    receiver_ready = False
     while(not receiver_ready):
         print("hello")
         print(receiver_ready)
         receiver_ready = protocol_obj.receiver_ready()
         print(receiver_ready)
-    print("salam")'''
-    #sleep(1)
+    print("salam")
+    #sleep(1) """
     message = queue.get()
     print(message)
     if message == "RECEIVER_READY":

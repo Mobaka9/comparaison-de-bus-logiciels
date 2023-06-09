@@ -58,6 +58,9 @@ def ontick():
     lprint('%s send a tick', IVYAPPNAME)
     IvySendMsg('%s_tick' % IVYAPPNAME)
 
+def onmsgproc2(self,agent, *larg):
+        print("last one")
+
 
 if __name__ == '__main__':
     # initializing ivybus and isreadymsg
@@ -99,6 +102,8 @@ if __name__ == '__main__':
     #IvyBindMsg(onhello,'^hello=([^ ]*) from=([^ ]*)')
     # binding to every message
     IvyBindMsg(onmsgproc, '(.*)')
+    IvyBindMsg(onmsgproc2, '(Hello Receiver)')
+
     # creating a infinite timer
    # timerid = IvyTimerRepeatAfter(0,        # number of time to be called
       #                          1000,     # delay in ms between calls

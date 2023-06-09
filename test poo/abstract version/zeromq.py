@@ -28,7 +28,7 @@ class ZeroMQProtocol(AbstractProtocol):
 
         else:
             self.socket = context.socket(zmq.SUB)
-            self.socket.setsockopt(zmq.RCVHWM, 2000000)
+            self.socket.setsockopt(zmq.RCVHWM, 2000000) 
             self.socket.connect("tcp://localhost:%s" % self.port)
             
         
@@ -56,6 +56,8 @@ class ZeroMQProtocol(AbstractProtocol):
         
 
     def send_message(self, message, topic):
+        #sleep(0.0001)
+
         topic_message = str(topic) + "&" + str(message)  # Ajouter le topic au message
         self.socket.send_string(topic_message)
 

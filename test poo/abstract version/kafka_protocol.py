@@ -51,10 +51,18 @@ class KafkaProtocol(AbstractProtocol):
             print(str(ex))
 
     def receiver_ready(self):
+        self.kafka_test = KafkaConsumer(
+            
+            auto_offset_reset='latest',
+            bootstrap_servers=['localhost:9092'],
+            api_version=(0, 10),
+            consumer_timeout_ms=10000
+        )
+        self.kafka_test.subscribe('start')
         print("start receive")
         while not self.ready:
             print("a")
-            for msg in self.consumer:
+            for msg in self.kafka_test:
                 print("topic")
                 if msg.topic == 'start':
                     print("start received")
@@ -65,10 +73,11 @@ class KafkaProtocol(AbstractProtocol):
     
     def receive_message(self, message_count, queue):
         #self.kafka_test = KafkaProducer(bootstrap_servers=['localhost:9092'], api_version=(0, 10))
-        '''
+        self.kafka_producer = KafkaProducer(bootstrap_servers=['localhost:9092'], api_version=(0, 10))
+        
         string_bytes = str.encode("receiver ready")
         self.kafka_producer.send('start', value=string_bytes)
-        self.kafka_producer.flush()'''
+        self.kafka_producer.flush()
         queue.put("RECEIVER_READY")
         for msg in self.consumer:
             if msg.topic == '10001':

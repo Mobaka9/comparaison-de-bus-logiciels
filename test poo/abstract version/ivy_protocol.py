@@ -90,7 +90,8 @@ class IvyProtocol(AbstractProtocol):
         pass
 
     def send_message(self, message, topic):
-    
+            #sleep(0.00001)
+
             IvySendMsg(message)
     @staticmethod
     def lprint(fmt, *arg):
