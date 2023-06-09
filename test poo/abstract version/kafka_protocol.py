@@ -50,27 +50,7 @@ class KafkaProtocol(AbstractProtocol):
         except Exception as ex:
             print(str(ex))
 
-    def receiver_ready(self):
-        self.kafka_test = KafkaConsumer(
-            
-            auto_offset_reset='latest',
-            bootstrap_servers=['localhost:9092'],
-            api_version=(0, 10),
-            consumer_timeout_ms=10000
-        )
-        self.kafka_test.subscribe('start')
-        print("start receive")
-        while not self.ready:
-            print("a")
-            for msg in self.kafka_test:
-                print("topic")
-                if msg.topic == 'start':
-                    print("start received")
-                    self.ready = True
-                    
-        print("The receiver is ready")
-        return self.ready
-    
+       
     def receive_message(self, message_count, queue):
         #self.kafka_test = KafkaProducer(bootstrap_servers=['localhost:9092'], api_version=(0, 10))
         self.kafka_producer = KafkaProducer(bootstrap_servers=['localhost:9092'], api_version=(0, 10))

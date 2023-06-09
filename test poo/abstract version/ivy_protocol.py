@@ -86,8 +86,6 @@ class IvyProtocol(AbstractProtocol):
             IvyStart(sivybus)
             self.is_initialized = True
             
-    def receiver_ready(self):
-        pass
 
     def send_message(self, message, topic):
             #sleep(0.00001)

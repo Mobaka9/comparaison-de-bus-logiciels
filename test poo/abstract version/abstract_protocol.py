@@ -9,11 +9,7 @@ class AbstractProtocol(ABC):
     @abstractmethod
     def send_message(self, message, topic):
         pass
-    
-    @abstractmethod
-    def receiver_ready(self):
-        pass
-    
+
     @abstractmethod
     def receive_message(self):
         pass 

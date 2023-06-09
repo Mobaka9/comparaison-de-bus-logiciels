@@ -32,28 +32,7 @@ class ZeroMQProtocol(AbstractProtocol):
             self.socket.connect("tcp://localhost:%s" % self.port)
             
         
-    def receiver_ready(self):
-        print("start receive")
-        context = zmq.Context()
-
-        self.socket_test = context.socket(zmq.SUB)
-        self.socket_test.setsockopt(zmq.RCVHWM, 2000000)
-        self.socket_test.connect("tcp://localhost:%s" % self.port_test)
-        while not self.ready:
-            self.socket_test.setsockopt_string(zmq.SUBSCRIBE, "10000")
-
-            string = self.socket_test.recv()
-            print("dkhlna")
-
-            topic, messagedata = string.decode('utf-8').split("&")
-            print("topic")
-            if topic == "100":
-                    print("start received")
-                    self.ready = True
-                    
-        print("The receiver is ready")
-        return self.ready
-        
+          
 
     def send_message(self, message, topic):
         #sleep(0.0001)

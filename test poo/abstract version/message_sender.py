@@ -13,7 +13,7 @@ class MessageSender:
         
         
         if type == "total":
-            length_of_string = 300000
+            length_of_string = 3000
             message_rand = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(length_of_string))+"="
 
             start_time = time.time() 
