@@ -14,8 +14,7 @@ def main():
     protocol = sys.argv[1]
     message_count = int(sys.argv[2])
     test_type = sys.argv[3]
-    port = sys.argv[4:] if protocol == 'ivy' else None
-    port = sys.argv[4] if protocol != 'ivy' else None
+    port = sys.argv[4:] if protocol == 'ivy' else sys.argv[4]
 
     queue = multiprocessing.Queue()
     

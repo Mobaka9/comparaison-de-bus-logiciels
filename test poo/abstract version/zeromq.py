@@ -11,9 +11,6 @@ class ZeroMQProtocol(AbstractProtocol):
         self.com = com
         self.plt_data = []
         self.id = 0
-        self.wait = False
-        self.socket_test = None
-        self.ready = False
         self.port_test = "5557"
 
     def initialize(self):
@@ -58,24 +55,17 @@ class ZeroMQProtocol(AbstractProtocol):
         self.socket.setsockopt_string(zmq.SUBSCRIBE, topicfilter)
         self.socket.setsockopt_string(zmq.SUBSCRIBE, "10002")
 
-        for i in range(message_count+1):
+        while not self.test_finished:
             string = self.socket.recv()
             t1 = time.time()
-            #topic, messagedata = string.split()
             topic, messagedata = string.decode('utf-8').split("&")
-            #print(messagedata)
-            
+
             if topic == "10001" :
                 self.id+=1
                 tmp= [self.id, messagedata,t1]
                 self.plt_data.append(tmp)
-            elif topic == "10002":
-                print("2")
-                self.wait=False
-            
-        while self.wait:
-            pass
-        #print(messagedata)
-        #messagedata = messagedata.decode('utf-8')
+            else:
+                print("error")
+
         return(self.plt_data)
 

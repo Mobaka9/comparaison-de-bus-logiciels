@@ -11,7 +11,8 @@ from abstract_protocol import AbstractProtocol
 
 class IvyProtocol(AbstractProtocol):
     
-    def __init__(self,args):
+    def __init__(self, args):
+        super().__init__()
         self.is_initialized = False
         self.args = args
         self.msg = None

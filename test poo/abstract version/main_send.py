@@ -49,9 +49,14 @@ def main_send(protocol, message_count, test_type, port, queue):
         print(receiver_ready)
     print("salam")
     #sleep(1) """
-    message = queue.get()
-    print(message)
-    if message == "RECEIVER_READY":
-        sleep(1)
-        sender = MessageSender(protocol_obj)
-        sender.send_messages(message_count, test_type)
+
+    while True:
+        message = queue.get()
+        print(message)
+        if message == "RECEIVER_READY":
+            sleep(1)
+            sender = MessageSender(protocol_obj)
+            sender.send_messages(message_count, test_type)
+        elif message == "END_TEST":
+            #calcul des résulat
+            pass
